@@ -1,0 +1,5 @@
+services:
+  damedia.stream_wrapper:
+    class: Drupal\damedia\StreamWrapper\DamediaStreamWrapper
+    tags:
+      - { name: stream_wrapper, scheme: damedia }

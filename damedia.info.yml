@@ -1,0 +1,5 @@
+name: DAMedia
+type: module
+description: Integration with DAM system.
+package: DAMedia
+core: '8.x'
