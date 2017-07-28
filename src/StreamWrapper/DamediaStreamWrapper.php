@@ -541,7 +541,7 @@ class DamediaStreamWrapper implements StreamWrapperInterface {
    */
   public function stream_stat() {
     $stat = array();
-    $request = drupal_http_request($this->uri, array('method' => 'HEAD'));
+    $request = $this->drupal_http_request($this->uri, 'HEAD');
     if (empty($request->error)) {
       if (isset($request->headers['content-length'])) {
         $stat['size'] = $request->headers['content-length'];
@@ -753,13 +753,30 @@ class DamediaStreamWrapper implements StreamWrapperInterface {
     if (!isset($this->stream_content)) {
       $this->stream_content = NULL;
 
-      $request = drupal_http_request($this->uri);
+      $request = $this->drupal_http_request($this->uri);
       if (empty($request->error) && !empty($request->data)) {
         $this->stream_content = $request->data;
       }
     }
 
     return $this->stream_content;
+  }
+
+  protected function drupal_http_request($url, $method = 'GET') {
+    $method = strtolower($method);
+
+    try {
+      $response = \Drupal::httpClient()->{$method}($url);
+      $data = (string) $response->getBody();
+      if (empty($data)) {
+        return FALSE;
+      }
+    }
+    catch (RequestException $e) {
+      return FALSE;
+    }
+
+    return $data;
   }
 
 }
